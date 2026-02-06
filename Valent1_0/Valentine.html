@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Valentine? 💕</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .question-page {
+            display: block;
+        }
+
+        .celebration-page {
+            display: none;
+        }
+
+        h1 {
+            color: white;
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .emoji {
+            font-size: 5rem;
+            margin-bottom: 2rem;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .buttons {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-top: 3rem;
+            position: relative;
+            min-height: 100px;
+        }
+
+        button {
+            padding: 1.5rem 3rem;
+            font-size: 1.5rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .yes-btn {
+            background: #ff6b9d;
+            color: white;
+        }
+
+        .yes-btn:hover {
+            background: #ff527a;
+            transform: scale(1.05);
+        }
+
+        .no-btn {
+            background: #e0e0e0;
+            color: #666;
+            position: absolute;
+        }
+
+        .celebration-photo {
+            width: 300px;
+            height: 300px;
+            border-radius: 20px;
+            margin: 2rem auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            object-fit: cover;
+            animation: fadeInScale 0.8s ease-out;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .thank-you-text {
+            color: white;
+            font-size: 2rem;
+            margin-top: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: fadeIn 1s ease-out 0.3s both;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .firework {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+        }
+
+        @keyframes explode {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--tx), var(--ty)) scale(0);
+            }
+        }
+
+        .heart {
+            position: fixed;
+            font-size: 2rem;
+            pointer-events: none;
+            animation: floatUp 3s ease-in forwards;
+            opacity: 0.8;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="question-page" id="questionPage">
+            <div class="emoji">💕</div>
+            <h1>Will You Be My Valentine?</h1>
+            <div class="buttons" id="buttonContainer">
+                <button class="yes-btn" onclick="showCelebration()">Yes! 💖</button>
+                <button class="no-btn" id="noBtn">No</button>
+            </div>
+        </div>
+
+        <div class="celebration-page" id="celebrationPage">
+            <h1>Yay! 🎉</h1>
+            <img src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400&h=400&fit=crop" 
+                 alt="Valentine's Heart" 
+                 class="celebration-photo">
+            <p class="thank-you-text">Thank you! I knew it! 💕</p>
+        </div>
+    </div>
+
+    <script>
+        const noBtn = document.getElementById('noBtn');
+        const buttonContainer = document.getElementById('buttonContainer');
+        let noBtnClicks = 0;
+
+        // Position the No button initially
+        noBtn.style.left = '60%';
+        noBtn.style.top = '50%';
+        noBtn.style.transform = 'translate(-50%, -50%)';
+
+        // Move No button on hover
+        noBtn.addEventListener('mouseenter', moveNoButton);
+        noBtn.addEventListener('click', moveNoButton);
+
+        function moveNoButton(e) {
+            e.preventDefault();
+            noBtnClicks++;
+            
+            const containerRect = buttonContainer.getBoundingClientRect();
+            const btnRect = noBtn.getBoundingClientRect();
+            
+            // Random position within the button container
+            const maxX = window.innerWidth - btnRect.width - 40;
+            const maxY = window.innerHeight - btnRect.height - 40;
+            
+            let newX = Math.random() * maxX + 20;
+            let newY = Math.random() * maxY + 20;
+            
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = newX + 'px';
+            noBtn.style.top = newY + 'px';
+            noBtn.style.transform = 'none';
+            
+            // Change text after a few attempts
+            if (noBtnClicks > 3) {
+                noBtn.textContent = 'No??? 🥺';
+            }
+            if (noBtnClicks > 6) {
+                noBtn.textContent = 'Please? 💔';
+            }
+        }
+
+        function showCelebration() {
+            document.getElementById('questionPage').style.display = 'none';
+            document.getElementById('celebrationPage').style.display = 'block';
+            
+            // Start fireworks
+            setInterval(createFirework, 400);
+            
+            // Create floating hearts
+            setInterval(createHeart, 600);
+        }
+
+        function createFirework() {
+            const colors = ['#ff6b9d', '#ffd93d', '#6bcf7f', '#4d94ff', '#ff6347', '#da70d6'];
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight * 0.7;
+            
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            
+            for (let i = 0; i < 30; i++) {
+                createParticle(x, y, color);
+            }
+        }
+
+        function createParticle(x, y, color) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = x + 'px';
+            particle.style.top = y + 'px';
+            particle.style.background = color;
+            
+            const angle = Math.random() * Math.PI * 2;
+            const velocity = 50 + Math.random() * 100;
+            const tx = Math.cos(angle) * velocity;
+            const ty = Math.sin(angle) * velocity;
+            
+            particle.style.setProperty('--tx', tx + 'px');
+            particle.style.setProperty('--ty', ty + 'px');
+            particle.style.animation = 'explode 1s ease-out forwards';
+            
+            document.body.appendChild(particle);
+            
+            setTimeout(() => particle.remove(), 1000);
+        }
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.textContent = '💕';
+            heart.style.left = Math.random() * window.innerWidth + 'px';
+            heart.style.top = window.innerHeight + 'px';
+            
+            document.body.appendChild(heart);
+            
+            setTimeout(() => heart.remove(), 3000);
+        }
+    </script>
+</body>
+</html>
